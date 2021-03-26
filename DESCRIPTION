@@ -1,0 +1,26 @@
+Package: covidsimvaxr
+Title: R Support for 'CovidSimVax'
+Version: 0.1.0
+Authors@R: c(person("Rich", "FitzJohn", role = c("aut", "cre"),
+                    email = "rich.fitzjohn@gmail.com"),
+             person("Imperial College of Science, Technology and Medicine",
+                    role = "cph"))
+Description: Create and run odin models as a service over a simple HTTP api.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+URL: https://github.com/mrc-ide/covidsimvaxr
+BugReports: https://github.com/mrc-ide/covidsimvaxr/issues
+Imports:
+    docopt,
+    jsonlite,
+    nimue,
+    porcelain (>= 0.1.1)
+Suggests:
+    mockery,
+    testthat
+Remotes:
+    mrc-ide/nimue,
+    reside-ic/porcelain
