@@ -18,6 +18,7 @@ COPY docker/Rprofile.site /usr/local/lib/R/etc/Rprofile.site
 
 RUN install2.r --error \
         --repos https://mrc-ide.github.io/drat/ \
+        --repos https://ncov-ic.github.io/drat/ \
         --repos https://cloud.r-project.org \
         odin \
         nimue \
