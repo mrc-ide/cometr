@@ -6,7 +6,7 @@ main <- function(args = commandArgs(TRUE)) {
 
 main_args <- function(args) {
   doc <- "Usage:
-  covidsimvaxr [options]
+  cometr [options]
 
 Options:
   --port=PORT   Port to run on [default: 8321]
@@ -21,8 +21,8 @@ Options:
 write_script <- function(path, versioned = FALSE) {
   dir.create(path, FALSE, TRUE)
   rscript <- "/usr/bin/env Rscript"
-  code <- c(sprintf("#!%s", rscript), "covidsimvaxr:::main()")
-  path_bin <- file.path(path, "covidsimvaxr")
+  code <- c(sprintf("#!%s", rscript), "cometr:::main()")
+  path_bin <- file.path(path, "cometr")
   writeLines(code, path_bin)
   Sys.chmod(path_bin, "755")
   invisible(path_bin)

@@ -1,4 +1,4 @@
 library(testthat)
-library(covidsimvaxr)
+library(cometr)
 
-test_check("covidsimvaxr")
+test_check("cometr")

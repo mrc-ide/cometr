@@ -4,8 +4,8 @@ test_that("root", {
   endpoint <- endpoint_root()
 
   res <- endpoint$target()
-  expect_equal(res$name, scalar("covidsimvaxr"))
-  expect_setequal(names(res$version), c("odin", "nimue", "covidsimvaxr"))
+  expect_equal(res$name, scalar("cometr"))
+  expect_setequal(names(res$version), c("odin", "nimue", "cometr"))
 
   res <- endpoint$run()
   expect_true(res$validated)

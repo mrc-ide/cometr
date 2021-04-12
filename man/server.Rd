@@ -2,7 +2,7 @@
 % Please edit documentation in R/api.R
 \name{server}
 \alias{server}
-\title{Run covidsimvaxr server}
+\title{Run cometr server}
 \usage{
 server(port, host = "0.0.0.0")
 }
@@ -15,5 +15,5 @@ server(port, host = "0.0.0.0")
 Never returns
 }
 \description{
-Run covidsimvaxr server
+Run cometr server
 }

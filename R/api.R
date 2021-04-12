@@ -1,6 +1,6 @@
-##' Run covidsimvaxr server
+##' Run cometr server
 ##'
-##' @title Run covidsimvaxr server
+##' @title Run cometr server
 ##' @param port Port to serve on
 ##'
 ##' @param host Optional host (either `0.0.0.0` or `127.0.0.1`)
@@ -8,7 +8,7 @@
 ##' @return Never returns
 ##' @export
 server <- function(port, host = "0.0.0.0") {
-  message("Starting covidsimvaxr server on port ", port)
+  message("Starting cometr server on port ", port)
   build_api()$run(host, port)
 }
 
@@ -35,7 +35,7 @@ api_postserialize <- function(data, req, res, value) {
 
 
 schema_root <- function() {
-  system.file("schema", package = "covidsimvaxr", mustWork = TRUE)
+  system.file("schema", package = "cometr", mustWork = TRUE)
 }
 
 
@@ -52,11 +52,11 @@ endpoint_root <- function() {
 
 
 target_root <- function() {
-  pkgs <- c("odin", "nimue", "covidsimvaxr")
+  pkgs <- c("odin", "nimue", "cometr")
   version <- lapply(pkgs, function(p)
     scalar(as.character(utils::packageVersion(p))))
   names(version) <- pkgs
   list(
-    name = scalar("covidsimvaxr"),
+    name = scalar("cometr"),
     version = version)
 }

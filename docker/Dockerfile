@@ -27,6 +27,6 @@ RUN install2.r --error \
 COPY . /src
 RUN R CMD INSTALL --install-tests /src && rm -rf /src
 
-RUN Rscript -e 'covidsimvaxr:::write_script("/usr/local/bin")'
+RUN Rscript -e 'cometr:::write_script("/usr/local/bin")'
 
-ENTRYPOINT ["/usr/local/bin/covidsimvaxr"]
+ENTRYPOINT ["/usr/local/bin/cometr"]

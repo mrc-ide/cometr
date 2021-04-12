@@ -24,6 +24,6 @@ test_that("set host", {
 test_that("write script", {
   p <- tempfile()
   res <- write_script(p)
-  expect_equal(basename(res), "covidsimvaxr")
+  expect_equal(basename(res), "cometr")
   expect_true(file.exists(res))
 })
