@@ -13,6 +13,11 @@ vcapply <- function(X, FUN, ...) { # nolint
 }
 
 
+vnapply <- function(X, FUN, ...) { # nolint
+  vapply(X, FUN, numeric(1), ...)
+}
+
+
 list_to_numeric <- function(x) {
   vapply(x, identity, numeric(1))
 }

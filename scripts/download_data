@@ -2,7 +2,7 @@
 countries <- c("GBR", "NZL")
 pkgload::load_all()
 
-dest <- here::here("inst/extdata")
+dest <- file.path(cometr_file(), "extdata")
 unlink(dest, recursive = TRUE)
 dir.create(dest, FALSE, TRUE)
 for (name in countries) {

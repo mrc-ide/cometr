@@ -5,7 +5,7 @@
 ## the package. We might load this and leave it all available to the
 ## process, or we might load on demand.
 update_country_data <- function(country, dest = NULL) {
-  dest <- dest %||% system.file("extdata", package = "cometr", mustWork = TRUE)
+  dest <- dest %||% cometr_file("extdata")
   path <- file.path(dest, paste0(country, ".rds"))
   dir.create(dest, FALSE, TRUE)
   saveRDS(build_country_data(country), path)
@@ -39,8 +39,8 @@ build_country_data <- function(country) {
   mixing_matrix <- squire:::process_contact_matrix_scaled_age(
     squire:::get_mixing_matrix(iso3c = country), population$n)
 
-  list(code = country,
-       name = name,
+  list(country_code = country,
+       country_name = name,
        params = params,
        vacc_strategy = vacc_strategy,
        contact = contact,
@@ -51,14 +51,13 @@ build_country_data <- function(country) {
 
 process_params <- function(params, population) {
   ret <- data.frame(
-    date = list_to_character(lapply(params, "[[", "date")),
-    deaths = list_to_numeric(lapply(params, function(x)
-      x$deaths %||% NA_real_)),
-    beta = list_to_numeric(lapply(params, "[[", "beta_set")),
-    beta_min = list_to_numeric(lapply(params, "[[", "beta_set_min")),
-    beta_max = list_to_numeric(lapply(params, "[[", "beta_set_max")),
-    tt_R0 = list_to_numeric(lapply(params, "[[", "tt_beta")),
-    Rt = list_to_numeric(lapply(params, "[[", "Rt")),
+    date = as.Date(vcapply(params, "[[", "date")),
+    date_offset = vnapply(params, "[[", "tt_beta"),
+    deaths = vnapply(params, function(x) x$deaths %||% NA_real_),
+    beta = vnapply(params, "[[", "beta_set"),
+    beta_min = vnapply(params, "[[", "beta_set_min"),
+    beta_max = vnapply(params, "[[", "beta_set_max"),
+    Rt = vnapply(params, "[[", "Rt"),
     stringsAsFactors = FALSE)
 
   last_date <- max(which(!is.na(ret$deaths)))
@@ -68,11 +67,7 @@ process_params <- function(params, population) {
     ## not happen but in future will
     ret$max_vaccine <- list_to_numeric(lapply(params, "[[", "max_vaccine"))
   } else {
-    ## Otherwise use pop size. The default in covidsim is 2.5% of the
-    ## population to recieve per week so /7 here
-    max_vaccine <- as.integer(sum(population$n) * 0.025 / 7)
-    ret$max_vaccine <- c(rep(0, last_date - 1L),
-                         rep(max_vaccine, nrow(ret) - last_date + 1L))
+    ret$max_vaccine <- 0
   }
 
   ret[seq_len(last_date), ]
