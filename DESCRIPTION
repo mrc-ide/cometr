@@ -24,3 +24,4 @@ Suggests:
 Remotes:
     mrc-ide/nimue,
     reside-ic/porcelain
+Config/testthat/edition: 3

@@ -1,5 +1,3 @@
-context("api")
-
 test_that("root", {
   endpoint <- endpoint_root()
 
@@ -11,7 +9,7 @@ test_that("root", {
   expect_true(res$validated)
 
   api <- build_api(validate = TRUE)
-  res <- api$request("GET", "/")
+  res <- suppressMessages(api$request("GET", "/"))
 
   expect_equal(res$status, 200L)
   expect_equal(res$headers[["Content-Type"]], "application/json")

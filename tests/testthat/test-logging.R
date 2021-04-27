@@ -1,5 +1,3 @@
-context("logging")
-
 test_that("logging produces a message", {
   expect_message(
     api_log(sprintf("%s %s", "a", "b")),
