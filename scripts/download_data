@@ -1,0 +1,11 @@
+#!/usr/bin/env Rscript
+countries <- c("GBR", "NZL")
+pkgload::load_all()
+
+dest <- here::here("inst/extdata")
+unlink(dest, recursive = TRUE)
+dir.create(dest, FALSE, TRUE)
+for (name in countries) {
+  message(sprintf("Updating '%s'", name))
+  update_country_data(name, dest)
+}

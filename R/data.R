@@ -1,0 +1,86 @@
+## At present, the app reads in data from various json files,
+## themselves derived from the nimue_js release and the periodic
+## fitting that OJ runs. We don't want to fetch these very often, so
+## we'll collect it up and do some basic processing and store it in
+## the package. We might load this and leave it all available to the
+## process, or we might load on demand.
+update_country_data <- function(country, dest = NULL) {
+  dest <- dest %||% system.file("extdata", package = "cometr", mustWork = TRUE)
+  path <- file.path(dest, paste0(country, ".rds"))
+  dir.create(dest, FALSE, TRUE)
+  saveRDS(build_country_data(country), path)
+}
+
+
+country_data <- function(country) {
+  path <- file.path(cometr_file("extdata"), paste0(country, ".rds"))
+  if (!file.exists(path)) {
+    stop(sprintf("Invalid country '%s'", country))
+  }
+  readRDS(path)
+}
+
+
+build_country_data <- function(country) {
+  base_params <-
+    "https://raw.githubusercontent.com/mrc-ide/global-lmic-reports/master"
+  base_vacc <-
+    "https://github.com/mrc-ide/nimue_js/releases/download/v1.0.10"
+  url_params <- file.path(base_params, country, "input_params.json")
+  url_vacc <- file.path(base_vacc, paste0(country, ".json"))
+
+  name <- squire::population$country[squire::population$iso3c == country][[1L]]
+  contact <- squire::get_mixing_matrix(name)
+  population <- squire::get_population(name)
+
+  params <- process_params(jsonlite::read_json(url_params), population)
+  vacc_strategy <- process_vacc_strategy(jsonlite::read_json(url_vacc))
+
+  mixing_matrix <- squire:::process_contact_matrix_scaled_age(
+    squire:::get_mixing_matrix(iso3c = country), population$n)
+
+  list(code = country,
+       name = name,
+       params = params,
+       vacc_strategy = vacc_strategy,
+       contact = contact,
+       mixing_matrix = mixing_matrix,
+       population = population)
+}
+
+
+process_params <- function(params, population) {
+  ret <- data.frame(
+    date = list_to_character(lapply(params, "[[", "date")),
+    deaths = list_to_numeric(lapply(params, function(x)
+      x$deaths %||% NA_real_)),
+    beta = list_to_numeric(lapply(params, "[[", "beta_set")),
+    beta_min = list_to_numeric(lapply(params, "[[", "beta_set_min")),
+    beta_max = list_to_numeric(lapply(params, "[[", "beta_set_max")),
+    tt_R0 = list_to_numeric(lapply(params, "[[", "tt_beta")),
+    Rt = list_to_numeric(lapply(params, "[[", "Rt")),
+    stringsAsFactors = FALSE)
+
+  last_date <- max(which(!is.na(ret$deaths)))
+
+  if ("max_vaccine" %in% names(params[[1]])) {
+    ## Get vaccine data if in input parameters - currently this does
+    ## not happen but in future will
+    ret$max_vaccine <- list_to_numeric(lapply(params, "[[", "max_vaccine"))
+  } else {
+    ## Otherwise use pop size. The default in covidsim is 2.5% of the
+    ## population to recieve per week so /7 here
+    max_vaccine <- as.integer(sum(population$n) * 0.025 / 7)
+    ret$max_vaccine <- c(rep(0, last_date - 1L),
+                         rep(max_vaccine, nrow(ret) - last_date + 1L))
+  }
+
+  ret[seq_len(last_date), ]
+}
+
+
+process_vacc_strategy <- function(vacc) {
+  list(
+    hcw_elderly = matrix(unlist(vacc$whoPriority), ncol = 17),
+    hcw_elderly_high_risk = matrix(unlist(vacc$etagePriority), ncol = 17))
+}
