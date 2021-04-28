@@ -3,7 +3,8 @@ countries <- c("GBR", "NZL")
 pkgload::load_all()
 
 dest <- file.path(cometr_file(), "extdata")
-unlink(dest, recursive = TRUE)
+
+unlink(file.path(dest, setdiff(dir(dest), "TEST.rds")))
 dir.create(dest, FALSE, TRUE)
 for (name in countries) {
   message(sprintf("Updating '%s'", name))
@@ -13,7 +14,7 @@ for (name in countries) {
 ## Create a test set for faster running by stripping out the data
 ## except the first few days. However, as this is used in the
 ## reference cases let's not update this very often...
-if (FALSE) {
+if (!file.exists(file.path(dest, "TEST.rds"))) {
   message("Updating 'TEST'")
   d <- country_data("GBR")
   d$params <- d$params[1:40, ]
