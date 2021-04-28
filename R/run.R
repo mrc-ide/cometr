@@ -184,7 +184,7 @@ comet_run_vaccine_efficacy <- function(efficacy_infection, efficacy_disease) {
     (1 - efficacy_infection)
 
   list(
-    infection = rep(efficacy_disease, n_groups),
+    infection = rep(efficacy_infection, n_groups),
     disease = rep(efficacy_extra, n_groups))
 }
 
