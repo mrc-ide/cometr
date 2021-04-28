@@ -19,10 +19,9 @@ test_that("root", {
 
 
 test_that("run", {
-  endpoint <- endpoint_run()
+  endpoint <- endpoint_nimue_run()
 
-  body_data <- list(region = "TEST")
-  body <- jsonlite::toJSON(body_data, auto_unbox = TRUE)
+  body <- paste(readLines("nimue-run-example.json"), collapse = "\n")
 
   res_target <- endpoint$target(body)
   expect_s3_class(res_target, "json")

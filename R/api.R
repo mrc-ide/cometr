@@ -16,7 +16,7 @@ server <- function(port, host = "0.0.0.0") {
 build_api <- function(validate = NULL) {
   api <- porcelain::porcelain$new(validate = validate)
   api$handle(endpoint_root())
-  api$handle(endpoint_run())
+  api$handle(endpoint_nimue_run())
 
   api$registerHook("preroute", api_preroute)
   api$registerHook("postserialize", api_postserialize)
@@ -63,18 +63,17 @@ target_root <- function() {
 }
 
 
-endpoint_run <- function() {
+endpoint_nimue_run <- function() {
   porcelain::porcelain_endpoint$new(
-    "POST", "/nimue/run", target_run,
+    "POST", "/nimue/run", target_nimue_run,
     porcelain::porcelain_input_body_json("pars", "NimueRunPars.schema",
                                          schema_root()),
     returning = returning_json("NimueRun.schema"))
 }
 
 
-target_run <- function(pars) {
+target_nimue_run <- function(pars) {
   pars <- jsonlite::fromJSON(pars)
-  pars <- nimue_parameters(pars$region)
   res <- nimue_run(pars)
   jsonlite::toJSON(res, dataframe = "rows", na = "null", null = "null")
 }

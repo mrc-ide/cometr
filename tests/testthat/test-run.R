@@ -1,5 +1,5 @@
 test_that("run data has correct shape", {
-  res <- nimue_run(nimue_parameters("TEST"))
+  res <- nimue_run(test_nimue_parameters())
   expect_type(res, "list")
   expect_equal(names(res),
                c("timeSeries", "fullyVaccinatedPersons",

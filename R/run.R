@@ -28,7 +28,7 @@ nimue_run <- function(pars) {
       R0 = beta$value,
       max_vaccine = vaccines$value * with_vaccines,
       tt_vaccine = vaccines$time,
-      time_period = nrow(dat$params) + pars$simulation$forecast_days,
+      time_period = nrow(dat$params) + pars$simulation$forecastDays,
       dur_V = pars$vaccination$durability,
       vaccine_efficacy_infection = vaccine_efficacy$infection,
       vaccine_efficacy_disease = vaccine_efficacy$disease,
@@ -102,6 +102,7 @@ nimue_run <- function(pars) {
 
 nimue_run_betas <- function(dat, future_rt_date, future_rt_value) {
   stopifnot(length(future_rt_date) == length(future_rt_value))
+  future_rt_date <- as.Date(future_rt_date)
   durs <- nimue:::default_durations()
   probs <- nimue:::default_probs()
   n_groups <- 17
@@ -137,6 +138,7 @@ nimue_run_vaccines <- function(dat, future_vaccine_date = NULL,
                                future_vaccine_value = NULL,
                                max_vaccine = NULL) {
   stopifnot(length(future_vaccine_date) == length(future_vaccine_value))
+  future_vaccine_date <- as.Date(future_vaccine_date)
   if (is.null(max_vaccine)) {
     ## Otherwise use pop size. The default in covidsim is 2.5% of the
     ## population to recieve per week so divided by 7 here:

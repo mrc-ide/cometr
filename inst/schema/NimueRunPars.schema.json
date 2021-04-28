@@ -1,12 +1,107 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "Root",
+    "id": "NimueRunPars",
     "type": "object",
+
+    "definitions": {
+        "proportion": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        }
+    },
+
     "properties": {
         "region": {
             "type": "string"
+        },
+        "healthcare": {
+            "type": "object",
+            "properties": {
+                "generalBeds": {
+                    "type": "number"
+                },
+                "criticalBeds": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false,
+            "required": ["generalBeds", "criticalBeds"]
+        },
+        "vaccination": {
+            "type": "object",
+            "properties": {
+                "efficacyInfection": {
+                    "$ref": "#/definitions/proportion"
+                },
+                "efficacyDisease": {
+                    "$ref": "#/definitions/proportion"
+                },
+                "maxDosesPerWeek": {
+                    "type": ["number", "null"]
+                },
+                "strategy": {
+                    "enum": [
+                        "HCW and Elderly",
+                        "HCW, Elderly and High-Risk",
+                        "Elderly",
+                        "All"
+                    ]
+                },
+                "uptake": {
+                    "$ref": "#/definitions/proportion"
+                },
+                "availability": {
+                    "$ref": "#/definitions/proportion"
+                },
+                "durability": {
+                    "type": "number"
+                },
+                "riskProportion": {
+                    "$ref": "#/definitions/proportion"
+                },
+                "future": {
+                    "type": "null",
+                    "comment": "this will hold the future vacc schedule"
+                }
+            },
+            "additionalProperties": false,
+            "required": ["efficacyInfection", "efficacyDisease",
+                         "maxDosesPerWeek", "strategy", "uptake",
+                         "availability", "durability", "riskProportion",
+                         "future"]
+        },
+        "rt": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "start": {
+                        "$ref": "#/definitions/date"
+                    },
+                    "value": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": ["start", "value"]
+            }
+        },
+        "simulation": {
+            "type": "object",
+            "properties": {
+                "forecastDays": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false,
+            "required": ["forecastDays"]
         }
     },
     "additionalProperties": false,
-    "required": ["region"]
+    "required": ["region", "healthcare", "vaccination", "rt", "simulation"]
 }
