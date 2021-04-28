@@ -16,6 +16,7 @@ server <- function(port, host = "0.0.0.0") {
 build_api <- function(validate = NULL) {
   api <- porcelain::porcelain$new(validate = validate)
   api$handle(endpoint_root())
+  api$handle(endpoint_countries())
   api$handle(endpoint_nimue_run())
 
   api$registerHook("preroute", api_preroute)
@@ -60,6 +61,18 @@ target_root <- function() {
   list(
     name = scalar("cometr"),
     version = version)
+}
+
+
+endpoint_countries <- function() {
+  porcelain::porcelain_endpoint$new(
+    "GET", "/countries", target_countries,
+    returning = returning_json("Countries.schema"))
+}
+
+
+target_countries <- function() {
+  readRDS(cometr_file("extdata/index.rds"))
 }
 
 

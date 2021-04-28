@@ -18,6 +18,26 @@ test_that("root", {
 })
 
 
+test_that("countries", {
+  endpoint <- endpoint_countries()
+
+  res <- endpoint$target()
+  expect_s3_class(res, "data.frame")
+  expect_equal(names(res), c("code", "name", "date", "public"))
+
+  res <- endpoint$run()
+  expect_true(res$validated)
+
+  api <- build_api(validate = TRUE)
+  res <- suppressMessages(api$request("GET", "/countries"))
+
+  expect_equal(res$status, 200L)
+  expect_equal(res$headers[["Content-Type"]], "application/json")
+  expect_equal(res$headers[["X-Porcelain-Validated"]], "true")
+  expect_equal(res$body, as.character(endpoint$run()$body))
+})
+
+
 test_that("run", {
   endpoint <- endpoint_nimue_run()
 
