@@ -254,7 +254,7 @@ date_offset <- function(start_date, future_date) {
 compute_reff <- function(out, beta, mixing_matrix, index) {
   dur_icase <- out$parameters$dur_ICase
   dur_imild <- out$parameters$dur_IMild
-  prob_hosp <- out$odin_parameters$prob_hosp
+  prob_hosp <- drop(out$odin_parameters$prob_hosp)
   pop <- out$parameters$population
 
   # in here we work out each time point the number of individuals in
