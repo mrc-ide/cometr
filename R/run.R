@@ -54,8 +54,8 @@ nimue_run <- function(pars) {
 
   len <- nrow(res_vac$output)
 
-  reff_beta <- approx(beta$time, beta$value, xout = seq_len(len),
-                      "constant", rule = 2)$y
+  reff_beta <- stats::approx(beta$time, beta$value, xout = seq_len(len),
+                             "constant", rule = 2)$y
   reff <- compute_reff(res_vac, reff_beta, dat$mixing_matrix, index)
   rt <- reff_beta * (last(dat$params$Rt) / last(dat$params$beta))
 
