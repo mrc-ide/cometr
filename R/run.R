@@ -28,11 +28,17 @@ comet_run <- function(pars) {
       R0 = beta$value,
       max_vaccine = vaccines$value * with_vaccines,
       tt_vaccine = vaccines$time,
-      time_period = nrow(dat$params) + pars$simulation$forecastDays,
+      time_period = nrow(dat$params) + pars$simulation$forecast_days,
       dur_V = pars$vaccination$durability,
       vaccine_efficacy_infection = vaccine_efficacy$infection,
       vaccine_efficacy_disease = vaccine_efficacy$disease,
-      vaccine_coverage_mat = coverage_matrix)
+      vaccine_coverage_mat = coverage_matrix,
+      ## relatively fast parameters
+      atol = 0.001,
+      rtol = 0.001,
+      step_size_min = 0.00001,
+      step_size_max = 1,
+      step_size_min_allow = TRUE)
   }
 
   res_vac <- run(TRUE) # 0.4s
@@ -67,8 +73,8 @@ comet_run <- function(pars) {
     counterfactualDeaths = incidence(res_cf, D_index),
     currentInfections = incidence(res_vac, inf_cumu_index),
     counterfactualCurrentInfections = incidence(res_cf, inf_cumu_index),
-    hospitilisations = total(res_vac, hosp_demand_index),
-    counterfactualHospitilisations = total(res_cf, hosp_demand_index),
+    hospitalisations = total(res_vac, hosp_demand_index),
+    counterfactualHospitalisations = total(res_cf, hosp_demand_index),
     criticalCare = total(res_vac, icu_demand_index),
     counterfactualCriticalCare = total(res_cf, icu_demand_index),
     reportedDeaths = dat$params$deaths[match(date, dat$params$date)],

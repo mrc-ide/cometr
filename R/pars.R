@@ -1,7 +1,18 @@
 ## This should give us a reasonable set of parameters, and they
 ## correspond to the ones that OJ was using
-comet_parameters <- function() {
-  list(region = "GBR",
+
+## This is totally just a stop-gap for now, we'll sort out something
+## that deals with different object types later.
+comet_parameters <- function(region) {
+  if (region == "TEST") {
+    rt <- data.frame(start = as.Date("2020-04-05"), value = 2.4)
+    forecast_days <- 40
+  } else {
+    rt <- data.frame(start = as.Date("2021-10-25"), value = 2.4)
+    forecast_days <- 720
+  }
+
+  list(region = region,
        ## version = "v4.20210316",
        healthcare = list(
          generalBeds = 314310,
@@ -17,9 +28,7 @@ comet_parameters <- function() {
          durability = 1095,
          riskProportion = 0.1,
          future = NULL),
-       rt = data.frame(
-         start = as.Date("2021-10-25"),
-         value = 2.4),
+       rt = rt,
        simulation = list(
-         forecastDays = 720))
+         forecast_days = forecast_days))
 }

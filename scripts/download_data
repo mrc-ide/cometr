@@ -9,3 +9,13 @@ for (name in countries) {
   message(sprintf("Updating '%s'", name))
   update_country_data(name, dest)
 }
+
+## Create a test set for faster running by stripping out the data
+## except the first few days. However, as this is used in the
+## reference cases let's not update this very often...
+if (FALSE) {
+  message("Updating 'TEST'")
+  d <- country_data("GBR")
+  d$params <- d$params[1:40, ]
+  saveRDS(d, file.path(dest, "TEST.rds"))
+}
