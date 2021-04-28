@@ -16,7 +16,7 @@ nimue_run <- function(pars) {
     seeding_cases <- 5
     seeding_age_order <- 6:10
 
-    ## Questions: beta_set and R0, always the same?
+    ## TODO: confirm that beta_set and R0 should always be the same
     nimue::run(
       dat$country_name,
       dur_R = dur_r,
@@ -44,7 +44,6 @@ nimue_run <- function(pars) {
   res_vac <- run(TRUE) # 0.4s
   res_cf <- run(FALSE) # 0.3s
 
-  ## TODO: save into core data?
   index <- squire:::odin_index(res_vac$model)
   d_index <- index$D
   inf_cumu_index <- index$infections_cumu
@@ -246,7 +245,7 @@ date_offset <- function(start_date, future_date) {
     return(integer(0))
   }
   ## TODO: I might be off by one here on the conversion from incoming
-  ## date for the flexible Rt values
+  ## date for the future Rt values
   as.numeric(future_date - start_date + 1)
 }
 

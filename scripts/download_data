@@ -92,11 +92,11 @@ process_vacc_strategy <- function(vacc) {
 countries <- sort(unique(squire::population$iso3c))
 dest <- file.path(cometr_file(), "extdata")
 
-## unlink(file.path(dest, setdiff(dir(dest), "TEST.rds")))
-## dir.create(dest, FALSE, TRUE)
-## for (name in countries) {
-##   update_country_data(name, dest)
-## }
+unlink(dest, recursive = TRUE)
+dir.create(dest, FALSE, TRUE)
+for (name in countries) {
+  update_country_data(name, dest)
+}
 
 ## Create a test set for faster running by stripping out the data
 ## except the first few days.
