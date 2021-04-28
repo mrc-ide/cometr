@@ -12,14 +12,14 @@ nimue_run <- function(pars) {
 
   run <- function(with_vaccines) {
     ## Fixed parameters:
-    dur_R <- 365
+    dur_r <- 365
     seeding_cases <- 5
     seeding_age_order <- 6:10
 
     ## Questions: beta_set and R0, always the same?
     nimue::run(
       dat$country_name,
-      dur_R = dur_R,
+      dur_R = dur_r,
       use_dde = TRUE,
       beta_set = beta$value,
       seeding_cases = seeding_cases,
@@ -46,7 +46,7 @@ nimue_run <- function(pars) {
 
   ## TODO: save into core data?
   index <- squire:::odin_index(res_vac$model)
-  D_index <- index$D
+  d_index <- index$D
   inf_cumu_index <- index$infections_cumu
   hosp_demand_index <- index$hospital_demand
   icu_demand_index <- index$ICU_demand
@@ -69,8 +69,8 @@ nimue_run <- function(pars) {
   date <- dat$params$date[[1]] + seq_len(len - 1)
   time_series <- data.frame(
     date = as.character(date),
-    deaths = incidence(res_vac, D_index),
-    counterfactualDeaths = incidence(res_cf, D_index),
+    deaths = incidence(res_vac, d_index),
+    counterfactualDeaths = incidence(res_cf, d_index),
     currentInfections = incidence(res_vac, inf_cumu_index),
     counterfactualCurrentInfections = incidence(res_cf, inf_cumu_index),
     hospitalisations = total(res_vac, hosp_demand_index),
@@ -232,7 +232,7 @@ scale_coverage_matrix <- function(coverage_matrix, vaccine_available, pop) {
   remaining <- tot_vaccines - tots_given
 
   ## next_group
-  next_group <- coverage_matrix[step,]-coverage_matrix[step - 1, ]
+  next_group <- coverage_matrix[step, ] - coverage_matrix[step - 1, ]
   new_cov <- remaining /
     (next_group[which(next_group > 0)] * pop[which(next_group > 0)])
   coverage_matrix[step, which(next_group > 0)] <- new_cov
@@ -252,15 +252,15 @@ date_offset <- function(start_date, future_date) {
 
 
 compute_reff <- function(out, beta, mixing_matrix, index) {
-  dur_ICase <- out$parameters$dur_ICase
-  dur_IMild <- out$parameters$dur_IMild
+  dur_icase <- out$parameters$dur_ICase
+  dur_imild <- out$parameters$dur_IMild
   prob_hosp <- out$odin_parameters$prob_hosp
   pop <- out$parameters$population
 
   # in here we work out each time point the number of individuals in
   # each age category in the S compartment at each time point.
   len <- nrow(out$output)
-  susceptible <- array(out$output[, index$S , ], dim = c(len, dim(index$S)))
+  susceptible <- array(out$output[, index$S, ], dim = c(len, dim(index$S)))
   # We divide by the total population
   prop_susc <- sweep(susceptible, 2, pop, FUN = "/")
   # We multiply by the effect of vaccines on onward infectiousness
@@ -269,13 +269,13 @@ compute_reff <- function(out, beta, mixing_matrix, index) {
                      FUN = "*")
 
   # Length 17 with relative R0 in each age category
-  rel_R0 <- prob_hosp * dur_ICase + (1 - prob_hosp) * dur_IMild
+  rel_r0 <- prob_hosp * dur_icase + (1 - prob_hosp) * dur_imild
 
   # here we are looping over each time point to calculate the adjusted
   # eigen incorporating the proportion of the susceptible population
   # in each age group
   adjusted_eigens <- vnapply(seq_len(len), function(t)
-    eigen1::eigen1(mixing_matrix * rowSums(prop_susc[t, , ] * rel_R0)))
+    eigen1::eigen1(mixing_matrix * rowSums(prop_susc[t, , ] * rel_r0)))
 
   # multiply beta by the adjusted eigen at each time point to get Reff
   beta * adjusted_eigens
