@@ -18,16 +18,6 @@ vnapply <- function(X, FUN, ...) { # nolint
 }
 
 
-list_to_numeric <- function(x) {
-  vapply(x, identity, numeric(1))
-}
-
-
-list_to_character <- function(x) {
-  vapply(x, identity, character(1))
-}
-
-
 last <- function(x) {
   x[[length(x)]]
 }

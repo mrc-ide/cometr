@@ -65,7 +65,7 @@ process_params <- function(params, population) {
   if ("max_vaccine" %in% names(params[[1]])) {
     ## Get vaccine data if in input parameters - currently this does
     ## not happen but in future will
-    ret$max_vaccine <- list_to_numeric(lapply(params, "[[", "max_vaccine"))
+    ret$max_vaccine <- vnapply(params, "[[", "max_vaccine")
   } else {
     ret$max_vaccine <- 0
   }
