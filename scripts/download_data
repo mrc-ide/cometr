@@ -8,10 +8,16 @@ pkgload::load_all()
 ## the package. We might load this and leave it all available to the
 ## process, or we might load on demand.
 update_country_data <- function(country, dest = NULL) {
-  dest <- dest %||% cometr_file("extdata")
-  path <- file.path(dest, paste0(country, ".rds"))
-  dir.create(dest, FALSE, TRUE)
-  saveRDS(build_country_data(country), path)
+  message(sprintf("Updating '%s'", country))
+  d <- build_country_data(country)
+  if (is.null(d)) {
+    message("...fit not found")
+  } else {
+    dest <- dest %||% cometr_file("extdata")
+    path <- file.path(dest, paste0(country, ".rds"))
+    dir.create(dest, FALSE, TRUE)
+    saveRDS(d, path)
+  }
 }
 
 
@@ -27,6 +33,13 @@ build_country_data <- function(country) {
   contact <- squire::get_mixing_matrix(name)
   population <- squire::get_population(name)
 
+  params_json <- tryCatch(suppressWarnings(
+    jsonlite::read_json(url_params)),
+    error = function(e) NULL)
+  if (is.null(params_json)) {
+    ## No data for this case.
+    return(NULL)
+  }
   params <- process_params(jsonlite::read_json(url_params), population)
   vacc_strategy <- process_vacc_strategy(jsonlite::read_json(url_vacc))
 
@@ -76,13 +89,12 @@ process_vacc_strategy <- function(vacc) {
 }
 
 
-countries <- c("GBR", "NZL")
+countries <- sort(unique(squire::population$iso3c))
 dest <- file.path(cometr_file(), "extdata")
 
 unlink(file.path(dest, setdiff(dir(dest), "TEST.rds")))
 dir.create(dest, FALSE, TRUE)
 for (name in countries) {
-  message(sprintf("Updating '%s'", name))
   update_country_data(name, dest)
 }
 
@@ -93,5 +105,19 @@ if (!file.exists(file.path(dest, "TEST.rds"))) {
   message("Updating 'TEST'")
   d <- country_data("GBR")
   d$params <- d$params[1:40, ]
+  d$country_code <- "TEST"
+  d$country_name <- "Testland"
   saveRDS(d, file.path(dest, "TEST.rds"))
 }
+
+
+files <- dir(dest, pattern = "^[A-Z]+\\.rds$", full.names = TRUE)
+dat <- lapply(files, readRDS)
+index <- data.frame(
+  code = vcapply(dat, "[[", "country_code"),
+  name = vcapply(dat, "[[", "country_name"),
+  date = vcapply(dat, function(x) as.character(last(x$params$date))),
+  stringsAsFactors = FALSE)
+index$public <- !(index$code %in% "TEST")
+
+saveRDS(index, file.path(dest, "index.rds"))
