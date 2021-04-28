@@ -1,0 +1,70 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "Root",
+    "type": "object",
+    "properties": {
+        "timeSeries": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                    },
+                    "deaths": {
+                        "type": "number"
+                    },
+                    "counterfactualDeaths": {
+                        "type": "number"
+                    },
+                    "currentInfections": {
+                        "type": "number"
+                    },
+                    "counterfactualCurrentInfections": {
+                        "type": "number"
+                    },
+                    "hospitalisations": {
+                        "type": "number"
+                    },
+                    "counterfactualHospitalisations": {
+                        "type": "number"
+                    },
+                    "criticalCare": {
+                        "type": "number"
+                    },
+                    "counterfactualCriticalCare": {
+                        "type": "number"
+                    },
+                    "reportedDeaths": {
+                        "type": ["number", "null"]
+                    },
+                    "Rt": {
+                        "type": "number"
+                    },
+                    "Reff": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "date", "deaths", "counterfactualDeaths",
+                    "currentInfections", "counterfactualCurrentInfections",
+                    "hospitalisations", "counterfactualHospitalisations",
+                    "criticalCare", "counterfactualCriticalCare",
+                    "reportedDeaths", "Rt", "Reff"
+                ]
+            }
+        },
+        "fullyVaccinatedPersons": {
+            "type": "null"
+        },
+        "cumulativePercentPopulationVaccinated": {
+            "type": "null"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "timeSeries", "fullyVaccinatedPersons",
+        "cumulativePercentPopulationVaccinated"]
+}

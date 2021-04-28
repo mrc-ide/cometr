@@ -16,6 +16,7 @@ server <- function(port, host = "0.0.0.0") {
 build_api <- function(validate = NULL) {
   api <- porcelain::porcelain$new(validate = validate)
   api$handle(endpoint_root())
+  api$handle(endpoint_run())
 
   api$registerHook("preroute", api_preroute)
   api$registerHook("postserialize", api_postserialize)
@@ -59,4 +60,20 @@ target_root <- function() {
   list(
     name = scalar("cometr"),
     version = version)
+}
+
+
+endpoint_run <- function() {
+  porcelain::porcelain_endpoint$new(
+    "POST", "/nimue/run", target_run,
+    porcelain::porcelain_input_body_json("pars", "Pars.schema", schema_root()),
+    returning = returning_json("Run.schema"))
+}
+
+
+target_run <- function(pars) {
+  pars <- jsonlite::fromJSON(pars)
+  pars <- comet_parameters(pars$region)
+  res <- comet_run(pars)
+  jsonlite::toJSON(res, dataframe = "rows", na = "null", null = "null")
 }

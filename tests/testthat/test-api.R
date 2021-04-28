@@ -16,3 +16,26 @@ test_that("root", {
   expect_equal(res$headers[["X-Porcelain-Validated"]], "true")
   expect_equal(res$body, as.character(endpoint$run()$body))
 })
+
+
+test_that("run", {
+  endpoint <- endpoint_run()
+
+  body_data <- list(region = "TEST")
+  body <- jsonlite::toJSON(body_data, auto_unbox = TRUE)
+
+  res_target <- endpoint$target(body)
+  expect_s3_class(res_target, "json")
+
+  res_endpoint <- endpoint$run(body)
+  expect_true(res_endpoint$validated)
+  expect_equal(res_endpoint$data, res_target)
+
+  api <- build_api(validate = TRUE)
+  res_api <- suppressMessages(api$request("POST", "/nimue/run", body = body))
+
+  expect_equal(res_api$status, 200L)
+  expect_equal(res_api$headers[["Content-Type"]], "application/json")
+  expect_equal(res_api$headers[["X-Porcelain-Validated"]], "true")
+  expect_equal(res_api$body, res_endpoint$body)
+})

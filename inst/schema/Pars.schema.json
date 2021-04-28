@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "Root",
+    "type": "object",
+    "properties": {
+        "region": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": false,
+    "required": ["region"]
+}
