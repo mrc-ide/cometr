@@ -1,4 +1,4 @@
-test_comet_parameters <- function() {
+test_nimue_parameters <- function() {
   d <- country_data("TEST")
   list(region = "TEST",
        ## version = "v4.20210316",

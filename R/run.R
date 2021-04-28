@@ -1,13 +1,13 @@
-comet_run <- function(pars) {
+nimue_run <- function(pars) {
   dat <- country_data(pars$region)
-  beta <- comet_run_betas(
+  beta <- nimue_run_betas(
     dat, pars$rt$start, pars$rt$value)
-  vaccines <- comet_run_vaccines(
+  vaccines <- nimue_run_vaccines(
     dat, pars$vaccination$future$start, pars$vaccination$future$value)
-  coverage_matrix <- comet_run_coverage_matrix(
+  coverage_matrix <- nimue_run_coverage_matrix(
     dat, pars$vaccination$strategy, pars$vaccination$uptake,
     pars$vaccination$availability)
-  vaccine_efficacy <- comet_run_vaccine_efficacy(
+  vaccine_efficacy <- nimue_run_vaccine_efficacy(
     pars$vaccination$efficacyInfection, pars$vaccination$efficacyDisease)
 
   run <- function(with_vaccines) {
@@ -100,7 +100,7 @@ comet_run <- function(pars) {
 }
 
 
-comet_run_betas <- function(dat, future_rt_date, future_rt_value) {
+nimue_run_betas <- function(dat, future_rt_date, future_rt_value) {
   stopifnot(length(future_rt_date) == length(future_rt_value))
   durs <- nimue:::default_durations()
   probs <- nimue:::default_probs()
@@ -133,7 +133,7 @@ comet_run_betas <- function(dat, future_rt_date, future_rt_value) {
 }
 
 
-comet_run_vaccines <- function(dat, future_vaccine_date = NULL,
+nimue_run_vaccines <- function(dat, future_vaccine_date = NULL,
                                future_vaccine_value = NULL,
                                max_vaccine = NULL) {
   stopifnot(length(future_vaccine_date) == length(future_vaccine_value))
@@ -155,7 +155,7 @@ comet_run_vaccines <- function(dat, future_vaccine_date = NULL,
 }
 
 
-comet_run_coverage_matrix <- function(dat, strategy, uptake, available) {
+nimue_run_coverage_matrix <- function(dat, strategy, uptake, available) {
   if (strategy == "HCW and Elderly") {
     coverage_matrix <- dat$vacc_strategy$hcw_elderly * uptake
   } else if (strategy == "HCW, Elderly and High-Risk") {
@@ -174,7 +174,7 @@ comet_run_coverage_matrix <- function(dat, strategy, uptake, available) {
 }
 
 
-comet_run_vaccine_efficacy <- function(efficacy_infection, efficacy_disease) {
+nimue_run_vaccine_efficacy <- function(efficacy_infection, efficacy_disease) {
   n_groups <- 17
 
   if (efficacy_disease < efficacy_infection) {

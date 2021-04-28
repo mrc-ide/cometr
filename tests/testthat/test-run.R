@@ -1,5 +1,5 @@
 test_that("run data has correct shape", {
-  res <- comet_run(comet_parameters("TEST"))
+  res <- nimue_run(nimue_parameters("TEST"))
   expect_type(res, "list")
   expect_equal(names(res),
                c("timeSeries", "fullyVaccinatedPersons",
@@ -31,11 +31,11 @@ test_that("run data has correct shape", {
 
 test_that("Compute vaccine efficacy correctly", {
   expect_equal(
-    comet_run_vaccine_efficacy(0.5, 0.8),
+    nimue_run_vaccine_efficacy(0.5, 0.8),
     list(infection = rep(0.5, 17),
          disease = rep(0.6, 17)))
   expect_equal(
-    comet_run_vaccine_efficacy(0.8, 0.5),
+    nimue_run_vaccine_efficacy(0.8, 0.5),
     list(infection = rep(0.8, 17),
          disease = rep(0.0, 17)))
 })
@@ -49,30 +49,30 @@ test_that("Select correct coverage matrix", {
 
   ## No constraint:
   expect_equal(
-    comet_run_coverage_matrix(dat, "HCW and Elderly", 1, 1),
+    nimue_run_coverage_matrix(dat, "HCW and Elderly", 1, 1),
     dat$vacc_strategy$hcw_elderly)
   expect_equal(
-    comet_run_coverage_matrix(dat, "HCW, Elderly and High-Risk", 1, 1),
+    nimue_run_coverage_matrix(dat, "HCW, Elderly and High-Risk", 1, 1),
     dat$vacc_strategy$hcw_elderly_high_risk)
   expect_equal(
-    comet_run_coverage_matrix(dat, "Elderly", 1, 1),
+    nimue_run_coverage_matrix(dat, "Elderly", 1, 1),
     mat_elderly)
   expect_equal(
-    comet_run_coverage_matrix(dat, "All", 1, 1),
+    nimue_run_coverage_matrix(dat, "All", 1, 1),
     mat_all)
 
   ## Reducing coverage uptake matrix:
   expect_equal(
-    comet_run_coverage_matrix(dat, "HCW and Elderly", 0.5, 1),
+    nimue_run_coverage_matrix(dat, "HCW and Elderly", 0.5, 1),
     dat$vacc_strategy$hcw_elderly / 2)
   expect_equal(
-    comet_run_coverage_matrix(dat, "HCW, Elderly and High-Risk", 0.5, 1),
+    nimue_run_coverage_matrix(dat, "HCW, Elderly and High-Risk", 0.5, 1),
     dat$vacc_strategy$hcw_elderly_high_risk / 2)
   expect_equal(
-    comet_run_coverage_matrix(dat, "Elderly", 0.5, 1),
+    nimue_run_coverage_matrix(dat, "Elderly", 0.5, 1),
     mat_elderly / 2)
   expect_equal(
-    comet_run_coverage_matrix(dat, "All", 0.5, 1),
+    nimue_run_coverage_matrix(dat, "All", 0.5, 1),
     mat_all / 2)
 
   ## Allow partial coverage
@@ -81,9 +81,9 @@ test_that("Select correct coverage matrix", {
     1
   m[209] <- 0.234106287912777
   expect_equal(
-    comet_run_coverage_matrix(dat, "Elderly", 1, 0.2), m)
+    nimue_run_coverage_matrix(dat, "Elderly", 1, 0.2), m)
 
   expect_error(
-    comet_run_coverage_matrix(dat, "Other", 0.5, 1),
+    nimue_run_coverage_matrix(dat, "Other", 0.5, 1),
     "Incorrect strategy")
 })

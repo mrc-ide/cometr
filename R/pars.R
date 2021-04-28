@@ -3,7 +3,7 @@
 
 ## This is totally just a stop-gap for now, we'll sort out something
 ## that deals with different object types later.
-comet_parameters <- function(region) {
+nimue_parameters <- function(region) {
   if (region == "TEST") {
     rt <- data.frame(start = as.Date("2020-04-05"), value = 2.4)
     forecast_days <- 40

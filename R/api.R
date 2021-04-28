@@ -66,14 +66,15 @@ target_root <- function() {
 endpoint_run <- function() {
   porcelain::porcelain_endpoint$new(
     "POST", "/nimue/run", target_run,
-    porcelain::porcelain_input_body_json("pars", "Pars.schema", schema_root()),
-    returning = returning_json("Run.schema"))
+    porcelain::porcelain_input_body_json("pars", "NimueRunPars.schema",
+                                         schema_root()),
+    returning = returning_json("NimueRun.schema"))
 }
 
 
 target_run <- function(pars) {
   pars <- jsonlite::fromJSON(pars)
-  pars <- comet_parameters(pars$region)
-  res <- comet_run(pars)
+  pars <- nimue_parameters(pars$region)
+  res <- nimue_run(pars)
   jsonlite::toJSON(res, dataframe = "rows", na = "null", null = "null")
 }
