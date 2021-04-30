@@ -24,8 +24,13 @@ test_that("run data has correct shape", {
     any(vapply(res$timeSeries[setdiff(cols, "reportedDeaths")], anyNA, TRUE)))
 
   ## not done yet:
-  expect_null(res$fullyVaccinatedPersons)
-  expect_null(res$cumulativePercentPopulationVaccinated)
+  expect_s3_class(res$fullyVaccinatedPersons, "data.frame")
+  expect_equal(names(res$fullyVaccinatedPersons),
+               c("age", "year2021", "year2022", "remainder"))
+
+  expect_s3_class(res$cumulativePercentPopulationVaccinated, "data.frame")
+  expect_equal(names(res$cumulativePercentPopulationVaccinated),
+               c("month", "healthcareWorkers", "over65", "workingAge"))
 })
 
 

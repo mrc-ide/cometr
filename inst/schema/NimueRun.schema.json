@@ -57,10 +57,49 @@
             }
         },
         "fullyVaccinatedPersons": {
-            "type": "null"
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "age": {
+                        "type": "string"
+                    },
+                    "year2021": {
+                        "type": "number"
+                    },
+                    "year2022": {
+                        "type": "number"
+                    },
+                    "remainder": {
+                        "type": "number"
+                    }
+                },
+                additionalProperties: false,
+                "required": ["age", "year2021", "year2022", "remainder"]
+            }
         },
         "cumulativePercentPopulationVaccinated": {
-            "type": "null"
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "month": {
+                        "type": "string"
+                    },
+                    "healthcareWorkers": {
+                        "type": "number"
+                    },
+                    "over65": {
+                        "type": "number"
+                    },
+                    "workingAge": {
+                        "type": "number"
+                    }
+                },
+                additionalProperties: false,
+                "required": ["month", "healthcareWorkers", "over65",
+                             "workingAge"]
+            }
         }
     },
     "additionalProperties": false,

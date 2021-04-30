@@ -81,17 +81,10 @@ nimue_run <- function(pars) {
     Reff = reff[-1],
     stringsAsFactors = FALSE)
 
-  ## "age": "80+",
-  ## "year_2021": 2.725948444792286,
-  ## "year_2022": 0,
-  ## "remainder": 0.724667555207714
-  fvps <- NULL
-
-  ## "month": "Mar 2021",
-  ## "healthcare_workers": 0,
-  ## "over_65_years": 0,
-  ## "working_age": 0
-  vaccinated <- NULL
+  ## These are just placeholders for now and won't change with country
+  ## (or any input)
+  fvps <- compute_fvps()
+  vaccinated <- compute_vaccinated()
 
   list(timeSeries = time_series,
        fullyVaccinatedPersons = fvps,
@@ -278,4 +271,43 @@ compute_reff <- function(out, beta, mixing_matrix, index) {
 
   # multiply beta by the adjusted eigen at each time point to get Reff
   beta * adjusted_eigens
+}
+
+
+## Dummy data, as provided by comet
+compute_fvps <- function(...) {
+  data.frame(
+    age = c("0-5", "5-10", "10-15", "15-20", "20-25", "25-30", "30-35",
+            "35-40", "40-45", "45-50", "50-55", "55-60", "60-65", "65-70",
+            "70-75", "75-80", "80+"),
+    year2021 = c(0, 0, 0, 0.0507, 0.0561, 0.0617, 0.0647, 0.0631, 0.0592,
+                 0.0591, 0.0637, 0.0623, 2.92, 2.7, 2.7, 1.94, 2.73),
+    year2022 = 0,
+    remainder = c(3.92, 4.12, 3.96, 3.64, 4.02, 4.42, 4.64, 4.53, 4.25, 4.24,
+                  4.57, 4.48, 0.988, 0.687, 0.691, 0.5, 0.725),
+    stringsAsFactors = FALSE)
+}
+
+
+## Dummy data, as provided by comet
+compute_vaccinated <- function(...) {
+  data.frame(
+    month = c("Mar 2021", "Apr 2021", "May 2021", "Jun 2021", "Jul 2021",
+              "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021",
+              "Jan 2022", "Feb 2022", "Mar 2022", "Apr 2022", "May 2022",
+              "Jun 2022", "Jul 2022", "Aug 2022", "Sep 2022", "Oct 2022",
+              "Nov 2022", "Dec 2022"),
+    healthcareWorkers = c(0, 591286, 591286, 591286, 591286, 591286, 591286,
+                          591286, 591286, 591286, 591286, 591286, 591286,
+                          591286, 591286, 591286, 591286, 591286, 591286,
+                          591286, 591286, 591286),
+    over65 = c(0, 2905887, 10130410, 10130410, 10130410, 10130410, 10130410,
+               10130410, 10130410, 10130410, 10130410, 10130410, 10130410,
+               10130410, 10130410, 10130410, 10130410, 10130410, 10130410,
+               10130410, 10130410, 10130410),
+    workingAge = c(0, 0, 290763, 2797511, 2797511, 2797511, 2797511, 2797511,
+                   2797511, 2797511, 2797511, 2797511, 2797511, 2797511,
+                   2797511, 2797511, 2797511, 2797511, 2797511, 2797511,
+                   2797511, 2797511),
+    stringsAsFactors = FALSE)
 }
