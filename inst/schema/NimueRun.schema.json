@@ -74,7 +74,7 @@
                         "type": "number"
                     }
                 },
-                additionalProperties: false,
+                "additionalProperties": false,
                 "required": ["age", "year2021", "year2022", "remainder"]
             }
         },
@@ -96,7 +96,7 @@
                         "type": "number"
                     }
                 },
-                additionalProperties: false,
+                "additionalProperties": false,
                 "required": ["month", "healthcareWorkers", "over65",
                              "workingAge"]
             }
