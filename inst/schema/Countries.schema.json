@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "NimueRunPars",
+    "id": "Countries",
     "type": "array",
     "items": {
         "type": "object",
