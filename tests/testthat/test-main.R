@@ -1,5 +1,3 @@
-context("main")
-
 test_that("defaults", {
   expect_mapequal(
     main_args(character(0)),

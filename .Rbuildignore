@@ -6,3 +6,4 @@ Makefile
 ^\.lintr$
 ^docker$
 ^buildkite$
+^scripts$

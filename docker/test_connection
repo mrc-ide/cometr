@@ -6,7 +6,7 @@ HERE=$(dirname $0)
 # In case we switch agents between steps
 [ ! -z $(docker images -q $TAG_SHA) ] || docker pull $TAG_SHA
 
-NAME_SERVER=odin_server
+NAME_SERVER=cometr_server
 
 function cleanup {
     echo "Cleaning up"
