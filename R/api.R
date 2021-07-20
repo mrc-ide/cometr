@@ -87,6 +87,9 @@ endpoint_nimue_run <- function() {
 
 target_nimue_run <- function(pars) {
   pars <- jsonlite::fromJSON(pars)
+  if (length(pars$rt) == 0) {
+    pars$rt <- data.frame(start = numeric(), value = numeric())
+  }
   res <- nimue_run(pars)
   jsonlite::toJSON(res, dataframe = "rows", na = "null", null = "null")
 }
