@@ -113,6 +113,7 @@ dat <- lapply(files, readRDS)
 index <- data.frame(
   code = vcapply(dat, "[[", "country_code"),
   name = vcapply(dat, "[[", "country_name"),
+  population = vnapply(dat, function(x) sum(x$population$n)),
   date = vcapply(dat, function(x) as.character(last(x$params$date))),
   stringsAsFactors = FALSE)
 index$public <- !(index$code %in% "TEST")
