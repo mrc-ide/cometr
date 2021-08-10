@@ -1,6 +1,16 @@
 #!/usr/bin/env Rscript
 pkgload::load_all()
 
+
+cometr_countries <- function() {
+  countries_url <- file.path(
+    "https://raw.githubusercontent.com",
+    "mrc-ide/global-lmic-reports-orderly/master/countries")
+  rl <- readLines(countries_url, warn = FALSE)
+  sort(rl[nchar(rl) == 3])
+}
+
+
 ## At present, the app reads in data from various json files,
 ## themselves derived from the nimue_js release and the periodic
 ## fitting that OJ runs. We don't want to fetch these very often, so
@@ -93,7 +103,7 @@ process_vacc_strategy <- function(vacc) {
 }
 
 
-countries <- sort(unique(squire::population$iso3c))
+countries <- cometr_countries()
 dest <- file.path(cometr_file(), "extdata")
 
 unlink(dest, recursive = TRUE)
