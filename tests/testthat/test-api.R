@@ -23,7 +23,8 @@ test_that("countries", {
 
   res <- endpoint$target()
   expect_s3_class(res, "data.frame")
-  expect_equal(names(res), c("code", "name", "population", "date", "public"))
+  expect_equal(names(res), c("code", "name", "population", "capacityGeneral",
+                             "capacityICU", "date", "public"))
 
   res <- endpoint$run()
   expect_true(res$validated)
