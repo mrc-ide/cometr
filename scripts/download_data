@@ -1,6 +1,16 @@
 #!/usr/bin/env Rscript
 pkgload::load_all()
 
+
+cometr_countries <- function() {
+  countries_url <- file.path(
+    "https://raw.githubusercontent.com",
+    "mrc-ide/global-lmic-reports-orderly/master/countries")
+  rl <- readLines(countries_url, warn = FALSE)
+  sort(rl[nchar(rl) == 3])
+}
+
+
 ## At present, the app reads in data from various json files,
 ## themselves derived from the nimue_js release and the periodic
 ## fitting that OJ runs. We don't want to fetch these very often, so
@@ -32,6 +42,8 @@ build_country_data <- function(country) {
   name <- squire::population$country[squire::population$iso3c == country][[1L]]
   contact <- squire::get_mixing_matrix(name)
   population <- squire::get_population(name)
+  capacity_general <- squire:::get_hosp_bed_capacity(name)
+  capacity_icu <- squire:::get_ICU_bed_capacity(name)
 
   params_json <- tryCatch(suppressWarnings(
     jsonlite::read_json(url_params)),
@@ -52,7 +64,9 @@ build_country_data <- function(country) {
        vacc_strategy = vacc_strategy,
        contact = contact,
        mixing_matrix = mixing_matrix,
-       population = population)
+       population = population,
+       capacity_general = capacity_general,
+       capacity_icu = capacity_icu)
 }
 
 
@@ -89,7 +103,7 @@ process_vacc_strategy <- function(vacc) {
 }
 
 
-countries <- sort(unique(squire::population$iso3c))
+countries <- cometr_countries()
 dest <- file.path(cometr_file(), "extdata")
 
 unlink(dest, recursive = TRUE)
@@ -114,6 +128,8 @@ index <- data.frame(
   code = vcapply(dat, "[[", "country_code"),
   name = vcapply(dat, "[[", "country_name"),
   population = vnapply(dat, function(x) sum(x$population$n)),
+  capacityGeneral = vnapply(dat, function(x) sum(x$capacity_general)),
+  capacityICU = vnapply(dat, function(x) sum(x$capacity_icu)),
   date = vcapply(dat, function(x) as.character(last(x$params$date))),
   stringsAsFactors = FALSE)
 index$public <- !(index$code %in% "TEST")
