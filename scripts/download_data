@@ -32,6 +32,8 @@ build_country_data <- function(country) {
   name <- squire::population$country[squire::population$iso3c == country][[1L]]
   contact <- squire::get_mixing_matrix(name)
   population <- squire::get_population(name)
+  capacity_general <- squire:::get_hosp_bed_capacity(name)
+  capacity_icu <- squire:::get_ICU_bed_capacity(name)
 
   params_json <- tryCatch(suppressWarnings(
     jsonlite::read_json(url_params)),
@@ -52,7 +54,9 @@ build_country_data <- function(country) {
        vacc_strategy = vacc_strategy,
        contact = contact,
        mixing_matrix = mixing_matrix,
-       population = population)
+       population = population,
+       capacity_general = capacity_general,
+       capacity_icu = capacity_icu)
 }
 
 
@@ -114,6 +118,8 @@ index <- data.frame(
   code = vcapply(dat, "[[", "country_code"),
   name = vcapply(dat, "[[", "country_name"),
   population = vnapply(dat, function(x) sum(x$population$n)),
+  capacityGeneral = vnapply(dat, function(x) sum(x$capacity_general)),
+  capacityICU = vnapply(dat, function(x) sum(x$capacity_icu)),
   date = vcapply(dat, function(x) as.character(last(x$params$date))),
   stringsAsFactors = FALSE)
 index$public <- !(index$code %in% "TEST")
